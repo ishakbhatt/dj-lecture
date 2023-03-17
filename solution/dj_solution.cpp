@@ -90,18 +90,18 @@ double calcDJScore(const Song &song)
     double dj_score = 0;
 
     // Update score
-    dj_score += year_g * pow(abs(year_sp - song.year), 2);
-    dj_score += bpm_g * pow(abs(bpm_sp - song.bpm), 2);
-    dj_score += nrgy_g * pow(abs(nrgy_sp - song.nrgy), 2);
-    dj_score += dnce_g * pow(abs(dnce_sp - song.dnce), 2);
-    dj_score += dB_g * pow(abs(dB_sp - song.dB), 2);
-    dj_score += live_g * pow(abs(live_sp - song.live), 2);
-    dj_score += val_g * pow(abs(val_sp - song.val), 2);
-    dj_score += dur_g * pow(abs(dur_sp - song.dur), 2);
-    dj_score += acous_g * pow(abs(acous_sp - song.acous), 2);
-    dj_score += spch_g * pow(abs(spch_sp - song.spch), 2);
-    dj_score += pop_g * pow(abs(pop_sp - song.pop), 2);
-
+    dj_score += pow(abs(year_sp - song.year), 2);
+    dj_score += pow(abs(bpm_sp - song.bpm), 2);
+    dj_score += pow(abs(nrgy_sp - song.nrgy), 2);
+    dj_score += pow(abs(dnce_sp - song.dnce), 2);
+    dj_score += pow(abs(dB_sp - song.dB), 2);
+    dj_score += pow(abs(live_sp - song.live), 2);
+    dj_score += pow(abs(val_sp - song.val), 2);
+    dj_score += pow(abs(dur_sp - song.dur), 2);
+    dj_score += pow(abs(acous_sp - song.acous), 2);
+    dj_score += pow(abs(spch_sp - song.spch), 2);
+    dj_score += pow(abs(pop_sp - song.pop), 2);
+    
     // Return score
     return sqrt(dj_score);
 }
@@ -123,7 +123,7 @@ bool compareSong(Song rhs, Song lhs)
 void print_playlist(vector<Song> & sortedSongData, ostream & out)
 {
     out << "Playlist created using data from " << sortedSongData.size() << " songs!" << endl;
-    for(int i = 0; i < SIZE_PLAYLIST; i++)
+    for(int i = 0; i < sortedSongData.size(); i++)
     {
         out << i+1  << " - "
              << " DJ Score: " << sortedSongData[i].dj_score << endl
@@ -137,16 +137,9 @@ int main()
 {
     // Create vector of songs
     vector<Song> songData;
-
-    /**
+    /*
      * Create input file streams.
-     * Create as many as you want, one per each file.
-     * An example is completed for you.
      */
-    ifstream in1950("1950.csv");
-    ifstream in1960("1960.csv");
-    ifstream in1970("1970.csv");
-    ifstream in1980("1980.csv");
     ifstream in1990("1990.csv");
     ifstream in2000("2000.csv");
     ifstream in2010("2010.csv");
@@ -155,14 +148,6 @@ int main()
      * Read data from each file stream. You will need to call
      * the readFile() function once for each filestream
      */
-    readFile(in1950, songData);
-    in1950.close();
-    readFile(in1960, songData);
-    in1960.close();
-    readFile(in1970, songData);
-    in1970.close();
-    readFile(in1980, songData);
-    in1980.close();
     readFile(in1990, songData);
     in1990.close();
     readFile(in2000, songData);
