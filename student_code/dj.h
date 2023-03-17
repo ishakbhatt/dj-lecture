@@ -30,33 +30,21 @@ using namespace std;
 /////////////////////////////////////////////
 ///// GLOBALS - MODIFY THESE VALUES ONLY ////
 /////////////////////////////////////////////
-int SIZE_PLAYLIST = 20;
+//int SIZE_PLAYLIST = 20;
 
 // DESIRED VALUES
-int year_sp = 0;
-int bpm_sp = 0;
-int nrgy_sp = 0;
-int dnce_sp = 0;
-int dB_sp = 0;
-int live_sp = 0;
-int val_sp = 0;
-int dur_sp = 0;
+int year_sp = 2012;
+int bpm_sp = 77;
+int nrgy_sp = 47;
+int dnce_sp = 62;
+int dB_sp = -7;
+int live_sp = 3;
+int val_sp = 68;
+int dur_sp = 220;
 int acous_sp = 0;
-int spch_sp = 0;
-int pop_sp = 0;
+int spch_sp = 4;
+int pop_sp = 75;
 
-// TUNABLE GAINS
-int year_g = 0;
-int bpm_g = 0;
-int nrgy_g = 0;
-int dnce_g = 0;
-int dB_g = 0;
-int live_g = 0;
-int val_g = 0;
-int dur_g = 0;
-int acous_g = 0;
-int spch_g = 0;
-int pop_g = 0;
 
 /////////////////////////////////////////////
 // DO NOT MODIFY ANY OF THE FOLLOWING CODE //
@@ -83,7 +71,7 @@ struct Song
     int acous;              // Acousticness - The higher the value of the more acoustic the song is
     int spch;               // Spechiness - the higher the value, the more spoken word the song contains
     int pop;                // Popularity - the higher the value, the more popular the song is
-    double dj_score = 0;    // dj_score - A custom score used to calculate the "fit" of the song to your playlist
+    double dj_score;    // dj_score - A custom score used to calculate the "fit" of the song to your playlist
 };
 
 /**
