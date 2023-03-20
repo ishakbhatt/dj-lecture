@@ -3,8 +3,7 @@
  * @authors Isha Bhatt (ibhatt), Mary Silvio (msilvio), Harsh Jhaveri (hjhaveri)
  * @brief A framework for reading in and processing Spotify song data from CSV files.
  * Once song data is read in, tunable parameters can be utilized to create and optimize playlist output.
- * This file contains the implementation of all necessary C++ code. Function documentation
- * can be found in dj.h.
+ * This file contains the implementation of all necessary C++ code and function docstrings.
  *
  * Dataset Source: https://www.kaggle.com/cnic92/spotify-past-decades-songs-50s10s
  *
