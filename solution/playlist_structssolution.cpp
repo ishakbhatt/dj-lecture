@@ -61,7 +61,7 @@ struct Song
     int acous;              // Acousticness - The higher the value of the more acoustic the song is
     int spch;               // Spechiness - the higher the value, the more spoken word the song contains
     int pop;                // Popularity - the higher the value, the more popular the song is
-    double dj_score;    // dj_score - A custom score used to calculate the "fit" of the song to your playlist
+    double dj_score;        // dj_score - A custom score used to calculate the "fit" of the song to your playlist
 };
 
 // HELPER FUNCTION DEFINITIONS
@@ -69,7 +69,6 @@ void readFile(istream &inFile, vector<Song> & songData);
 double calcDJScore(const Song &song);
 bool compareSong(Song rhs, Song lhs);
 void print_playlist(vector<Song> & sortedSongData, ostream & out);
-bool setInputSong(istream &inFile, string query_title);
 
 // HELPER FUNCTIONS
 void readFile(istream &inFile, vector<Song> & songData)
@@ -212,90 +211,6 @@ void print_playlist(vector<Song> & sortedSongData, ostream & out)
     }
 }
 
-bool setInputSong(istream &inFile, string query_title)
-{
-/**
- * @brief Modifies setpoints based on a song title
- *
- * @param inFile - input file stream, used to read in Song Data
- * @param query_title - input title used to define setpoint values
- */
-
-    // bool to return whether query song found or not
-    bool song_found = false;
-
-    // necessary and temporary variables
-    string line;
-    string id;
-    string title;
-    string genre;
-    string artist;
-    string val; 
-
-    // get header file
-    getline(inFile, line);
-
-    while(getline(inFile, line)){
-        // Create stringstream to parse line
-        stringstream songLine(line);
-
-        // song ID - We don't care about this
-        getline(songLine, id, ','); 
-
-        // title - compary query title against this
-        getline(songLine, title, ',');
-
-        // we don't care about artist & genre
-        getline(songLine, artist, ',');
-        getline(songLine, genre, ',');
-
-        getline(songLine, val, ','); // year
-        year_sp = stoi(val);
-
-        getline(songLine, val, ','); // bpm
-        bpm_sp = stoi(val);
-
-        getline(songLine, val, ','); // nrgy
-        nrgy_sp = stoi(val);
-
-        getline(songLine, val, ','); // dnce
-        dnce_sp = stoi(val);
-
-        getline(songLine, val, ','); // db
-        dB_sp = stoi(val);
-
-        getline(songLine, val, ','); // live
-        live_sp = stoi(val);
-
-        getline(songLine, val, ','); // val
-        val_sp = stoi(val);
-
-        getline(songLine, val, ','); // dur
-        dur_sp = stoi(val);
-
-        getline(songLine, val, ','); // acous
-        acous_sp = stoi(val);
-
-        getline(songLine, val, ','); // spch
-        spch_sp = stoi(val);
-
-        getline(songLine, val); // pop
-        pop_sp = stoi(val);
-
-        if(title == query_title){ // set setpoints based on query title
-            // song title found
-            song_found = true;
-
-            // print song title found
-            cout << "Modifying setpoints to user's input song..." << endl;
-            
-            // finished searching, leave loop
-            break;
-        }
-    }
-
-    return song_found;
-}
 
 int main()
 {
@@ -328,10 +243,13 @@ int main()
     bool setSong = false;
     while(setSong == false){
         cout << "Enter a song title: ";
+        // use getline since a song could be multiple words
         getline(cin, query_title);
         
+        // check entire vector for matching song
         for(int i = 0; i < songData.size(); ++i){
             if(songData.at(i).title == query_title){
+                // update sp values to chosen song
                 year_sp = songData.at(i).year;
                 bpm_sp = songData.at(i).bpm;
                 nrgy_sp = songData.at(i).nrgy;
@@ -343,7 +261,8 @@ int main()
                 acous_sp = songData.at(i).acous;
                 spch_sp = songData.at(i).spch;
                 pop_sp = songData.at(i).pop;
-                cout << query_title << " has been set as playlist starter!" << endl;
+
+                cout << query_title << " has been set as the playlist starter!" << endl;
                 setSong = true;
                 break;
             }
