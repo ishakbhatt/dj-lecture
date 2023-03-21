@@ -328,7 +328,7 @@ int main()
     bool setSong = false;
     while(setSong == false){
         cout << "Enter a song title: ";
-        cin >> query_title;
+        getline(cin, query_title);
         
         for(int i = 0; i < songData.size(); ++i){
             if(songData.at(i).title == query_title){
