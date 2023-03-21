@@ -61,7 +61,7 @@ struct Song
     int acous;              // Acousticness - The higher the value of the more acoustic the song is
     int spch;               // Spechiness - the higher the value, the more spoken word the song contains
     int pop;                // Popularity - the higher the value, the more popular the song is
-    double dj_score;    // dj_score - A custom score used to calculate the "fit" of the song to your playlist
+    double dj_score;        // dj_score - A custom score used to calculate the "fit" of the song to your playlist
 };
 
 // HELPER FUNCTION DEFINITIONS
@@ -69,7 +69,6 @@ void readFile(istream &inFile, vector<Song> & songData);
 double calcDJScore(const Song &song);
 bool compareSong(Song rhs, Song lhs);
 void print_playlist(vector<Song> & sortedSongData, ostream & out);
-bool setInputSong(istream &inFile, string query_title);
 
 // HELPER FUNCTIONS
 void readFile(istream &inFile, vector<Song> & songData)
@@ -134,8 +133,8 @@ void readFile(istream &inFile, vector<Song> & songData)
         getline(songLine, val); // pop
         song.pop = stoi(val);
 
-        // Calculate DJ Score
-        song.dj_score = calcDJScore(song);
+        // set DJ score to 0 for now
+        song.dj_score = 0;
 
         // Add song to songData vector
         songData.push_back(song);
@@ -198,7 +197,7 @@ void print_playlist(vector<Song> & sortedSongData, ostream & out)
 /**
  * @brief Print function used to print songs to the terminal
  *
- * @param songData - vector of all song data
+ * @param sortedSongData - vector of all song data
  * @param out - the output stream where playlist information will be output to
  */
     out << "Playlist created using data from " << sortedSongData.size() << " songs!" << endl;
@@ -212,89 +211,43 @@ void print_playlist(vector<Song> & sortedSongData, ostream & out)
     }
 }
 
-bool setInputSong(istream &inFile, string query_title)
-{
+void setInputSong(vector<Song> &songData){
 /**
  * @brief Modifies setpoints based on a song title
- *
- * @param inFile - input file stream, used to read in Song Data
- * @param query_title - input title used to define setpoint values
+ * @param songData - vector of all songs (unsorted)
  */
+    string query_title;
+    bool setSong = false;
+    while(setSong == false){
+        cout << "Enter a song title: ";
+        // use getline since a song could be multiple words
+        getline(cin, query_title);
+        
+        // check entire vector for matching song
+        for(int i = 0; i < songData.size(); ++i){
+            if(songData.at(i).title == query_title){
+                // update sp values to chosen song
+                year_sp = songData.at(i).year;
+                bpm_sp = songData.at(i).bpm;
+                nrgy_sp = songData.at(i).nrgy;
+                dnce_sp = songData.at(i).dnce;
+                dB_sp = songData.at(i).dB;
+                live_sp = songData.at(i).live;
+                val_sp = songData.at(i).val;
+                dur_sp = songData.at(i).dur;
+                acous_sp = songData.at(i).acous;
+                spch_sp = songData.at(i).spch;
+                pop_sp = songData.at(i).pop;
 
-    // bool to return whether query song found or not
-    bool song_found = false;
-
-    // necessary and temporary variables
-    string line;
-    string id;
-    string title;
-    string genre;
-    string artist;
-    string val; 
-
-    // get header file
-    getline(inFile, line);
-
-    while(getline(inFile, line)){
-        // Create stringstream to parse line
-        stringstream songLine(line);
-
-        // song ID - We don't care about this
-        getline(songLine, id, ','); 
-
-        // title - compary query title against this
-        getline(songLine, title, ',');
-
-        // we don't care about artist & genre
-        getline(songLine, artist, ',');
-        getline(songLine, genre, ',');
-
-        getline(songLine, val, ','); // year
-        year_sp = stoi(val);
-
-        getline(songLine, val, ','); // bpm
-        bpm_sp = stoi(val);
-
-        getline(songLine, val, ','); // nrgy
-        nrgy_sp = stoi(val);
-
-        getline(songLine, val, ','); // dnce
-        dnce_sp = stoi(val);
-
-        getline(songLine, val, ','); // db
-        dB_sp = stoi(val);
-
-        getline(songLine, val, ','); // live
-        live_sp = stoi(val);
-
-        getline(songLine, val, ','); // val
-        val_sp = stoi(val);
-
-        getline(songLine, val, ','); // dur
-        dur_sp = stoi(val);
-
-        getline(songLine, val, ','); // acous
-        acous_sp = stoi(val);
-
-        getline(songLine, val, ','); // spch
-        spch_sp = stoi(val);
-
-        getline(songLine, val); // pop
-        pop_sp = stoi(val);
-
-        if(title == query_title){ // set setpoints based on query title
-            // song title found
-            song_found = true;
-
-            // print song title found
-            cout << "Modifying setpoints to user's input song..." << endl;
-            
-            // finished searching, leave loop
-            break;
-        }
+                cout << query_title << " has been set as the playlist starter!" << endl;
+                setSong = true;
+                break;
+            } else {
+                // Print message to user if song not found, continues loop until song found
+                cout << "No match found for " << query_title << ". Please enter a valid song.";
+            }
+        } 
     }
-
-    return song_found;
 }
 
 int main()
@@ -309,18 +262,6 @@ int main()
     ifstream in2010("2010.csv");
 
     /**
-     * Query user for song title to define song attribute setpoints.
-     * Exit with message + non-zero return value if song title not found.
-     */
-    string query_title;
-    cout << "Enter a song title: ";
-    getline(cin, query_title);
-    if(!setInputSong(in1990, query_title) && !setInputSong(in2000, query_title) && !setInputSong(in2010, query_title)){
-        cout << "Song title not found. Please enter a valid song title." << endl;
-        return 1;
-    }
-
-    /**
      * Read data from each file stream. You will need to call
      * the readFile() function once for each filestream
      */
@@ -330,6 +271,18 @@ int main()
     in2000.close();
     readFile(in2010, songData);
     in2010.close();
+
+    /**
+     * Query user for song title to define song attribute setpoints.
+     * When song is found in vector, output song has been set to start
+     * the playlist, otherwise re-prompt user for song title
+     */
+    setInputSong(songData);
+
+    // calculate DJ scores
+    for(int i = 0; i < songData.size(); ++i){
+        songData.at(i).dj_score = calcDJScore(songData.at(i));
+    }
 
     // Sort your vector!
     sort(songData.begin(), songData.end(), compareSong);
