@@ -66,6 +66,7 @@ struct Song
 
 // HELPER FUNCTION DEFINITIONS
 void readFile(istream &inFile, vector<Song> & songData);
+void setInputSong(vector<Song> &songData);
 double calcDJScore(const Song &song);
 bool compareSong(Song rhs, Song lhs);
 void print_playlist(vector<Song> & sortedSongData, ostream & out);
@@ -141,6 +142,48 @@ void readFile(istream &inFile, vector<Song> & songData)
     }
 }
 
+void setInputSong(vector<Song> &songData){
+/**
+ * @brief Modifies setpoints based on a song title
+ * @param songData - vector of all songs (unsorted)
+ */
+    string query_title;
+    bool setSong = false;
+    while(setSong == false){
+        cout << "Enter a song title: ";
+        // use getline since a song could be multiple words
+        getline(cin, query_title);
+        
+        // check entire vector for matching song
+        for(int i = 0; i < songData.size(); ++i){
+            if(songData.at(i).title == query_title){
+                // TODO: update sp values to song attributes of chosen song
+
+                // year_sp = 
+                // bpm_sp = 
+                // nrgy_sp = 
+                // dnce_sp = 
+                // dB_sp = 
+                // live_sp = 
+                // val_sp = 
+                // dur_sp = 
+                // acous_sp = 
+                // spch_sp = 
+                // pop_sp = 
+
+                cout << query_title << " has been set as the playlist starter!" << endl;
+                // TODO: change value for while loop condition (hint: the song was set!)
+
+                // TODO: break out of this loop since we found the song and modified setpoints!
+
+            } else {
+                // Print message to user if song not found, continues loop until song found
+                cout << "No match found for " << query_title << ". Please enter a valid song.";
+            }
+        } 
+    }
+}
+
 double calcDJScore(const Song &song)
 {
 /**
@@ -207,47 +250,7 @@ void print_playlist(vector<Song> & sortedSongData, ostream & out)
     }
 }
 
-void setInputSong(vector<Song> &songData){
-/**
- * @brief Modifies setpoints based on a song title
- * @param songData - vector of all songs (unsorted)
- */
-    string query_title;
-    bool setSong = false;
-    while(setSong == false){
-        cout << "Enter a song title: ";
-        // use getline since a song could be multiple words
-        getline(cin, query_title);
-        
-        // check entire vector for matching song
-        for(int i = 0; i < songData.size(); ++i){
-            if(songData.at(i).title == query_title){
-                // TODO: pdate sp values to song attributes of chosen song
 
-                // year_sp = 
-                // bpm_sp = 
-                // nrgy_sp = 
-                // dnce_sp = 
-                // dB_sp = 
-                // live_sp = 
-                // val_sp = 
-                // dur_sp = 
-                // acous_sp = 
-                // spch_sp = 
-                // pop_sp = 
-
-                cout << query_title << " has been set as the playlist starter!" << endl;
-                // TODO: change value for while loop condition (hint: the song was set!)
-
-                // TODO: break out of this loop since we found the song and modified setpoints!
-
-            } else {
-                // Print message to user if song not found, continues loop until song found
-                cout << "No match found for " << query_title << ". Please enter a valid song.";
-            }
-        } 
-    }
-}
 
 int main()
 {
