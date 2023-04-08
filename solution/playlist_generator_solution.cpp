@@ -27,19 +27,6 @@ using namespace std;
 
 // DEFINITIONS
 
-// Setpoints to compare songs to
-int year_sp = 2012;
-int bpm_sp = 77;
-int nrgy_sp = 47;
-int dnce_sp = 62;
-int dB_sp = -7;
-int live_sp = 3;
-int val_sp = 68;
-int dur_sp = 220;
-int acous_sp = 0;
-int spch_sp = 4;
-int pop_sp = 75;
-
 /**
  * @brief Song structure to represent our song attributes in C++
  * Dataset: https://www.kaggle.com/cnic92/spotify-past-decades-songs-50s10s
@@ -64,15 +51,9 @@ struct Song
     double dj_score;        // dj_score - A custom score used to calculate the "fit" of the song to your playlist
 };
 
-// HELPER FUNCTION DEFINITIONS
-void readFile(istream &inFile, vector<Song> & songData);
-void setInputSong(vector<Song> &songData);
-double calcDJScore(const Song &song);
-bool compareSong(Song rhs, Song lhs);
-void print_playlist(vector<Song> & sortedSongData, ostream & out);
 
 // HELPER FUNCTIONS
-void readFile(istream &inFile, vector<Song> & songData)
+void readFile(istream &inFile, vector<Song> &songData)
 {
 /**
  * @brief Function used to read song data into vector
@@ -142,10 +123,11 @@ void readFile(istream &inFile, vector<Song> & songData)
     }
 }
 
-void setInputSong(vector<Song> &songData){
+void getSetpointSong(vector<Song> &songData, Song &setpointSong){
 /**
- * @brief Modifies setpoints based on a song title
+ * @brief Modifies setpoint song based on a song title
  * @param songData - vector of all songs (unsorted)
+ * @param setpointSong - song that will be set with input data 
  */
     string query_title;
     bool setSong = false;
@@ -157,31 +139,32 @@ void setInputSong(vector<Song> &songData){
         // check entire vector for matching song
         for(int i = 0; i < songData.size(); ++i){
             if(songData.at(i).title == query_title){
-                // update sp values to chosen song
-                year_sp = songData.at(i).year;
-                bpm_sp = songData.at(i).bpm;
-                nrgy_sp = songData.at(i).nrgy;
-                dnce_sp = songData.at(i).dnce;
-                dB_sp = songData.at(i).dB;
-                live_sp = songData.at(i).live;
-                val_sp = songData.at(i).val;
-                dur_sp = songData.at(i).dur;
-                acous_sp = songData.at(i).acous;
-                spch_sp = songData.at(i).spch;
-                pop_sp = songData.at(i).pop;
+                // update setpoint song member values to chosen song
+                setpointSong.year = songData.at(i).year;
+                setpointSong.bpm = songData.at(i).bpm;
+                setpointSong.nrgy = songData.at(i).nrgy;
+                setpointSong.dnce = songData.at(i).dnce;
+                setpointSong.dB = songData.at(i).dB;
+                setpointSong.live = songData.at(i).live;
+                setpointSong.val = songData.at(i).val;
+                setpointSong.dur = songData.at(i).dur;
+                setpointSong.acous = songData.at(i).acous;
+                setpointSong.spch = songData.at(i).spch;
+                setpointSong.pop = songData.at(i).pop;
 
                 cout << query_title << " has been set as the playlist starter!" << endl;
                 setSong = true;
                 break;
-            } else {
-                // Print message to user if song not found, continues loop until song found
-                cout << "No match found for " << query_title << ". Please enter a valid song.";
             }
         } 
+        if (setSong == false){
+            // Print message to user if song not found
+            cout << "No match found for " << query_title << ". Please enter a valid song." << endl;
+        }
     }
 }
 
-double calcDJScore(const Song &song)
+double calcDJScore(const Song &song, const Song &setpointSong)
 {
 /**
  * @brief Function used to calculate dj_score for each Song object.
@@ -189,46 +172,47 @@ double calcDJScore(const Song &song)
  * is better
  *
  * @param song - Song object to calculate dj_score for
+ * @param setpointSong - Song object to compare song to in calculations
  */
     // Create base score variable
     double dj_score = 0;
 
     // Update score
-    dj_score += pow(abs(year_sp - song.year), 2);
-    dj_score += pow(abs(bpm_sp - song.bpm), 2);
-    dj_score += pow(abs(nrgy_sp - song.nrgy), 2);
-    dj_score += pow(abs(dnce_sp - song.dnce), 2);
-    dj_score += pow(abs(dB_sp - song.dB), 2);
-    dj_score += pow(abs(live_sp - song.live), 2);
-    dj_score += pow(abs(val_sp - song.val), 2);
-    dj_score += pow(abs(dur_sp - song.dur), 2);
-    dj_score += pow(abs(acous_sp - song.acous), 2);
-    dj_score += pow(abs(spch_sp - song.spch), 2);
-    dj_score += pow(abs(pop_sp - song.pop), 2);
+    dj_score += pow(abs(setpointSong.year - song.year), 2);
+    dj_score += pow(abs(setpointSong.bpm - song.bpm), 2);
+    dj_score += pow(abs(setpointSong.nrgy - song.nrgy), 2);
+    dj_score += pow(abs(setpointSong.dnce - song.dnce), 2);
+    dj_score += pow(abs(setpointSong.dB - song.dB), 2);
+    dj_score += pow(abs(setpointSong.live - song.live), 2);
+    dj_score += pow(abs(setpointSong.val - song.val), 2);
+    dj_score += pow(abs(setpointSong.dur - song.dur), 2);
+    dj_score += pow(abs(setpointSong.acous - song.acous), 2);
+    dj_score += pow(abs(setpointSong.spch - song.spch), 2);
+    dj_score += pow(abs(setpointSong.pop - song.pop), 2);
     
     // Return score
     return sqrt(dj_score);
 }
 
-bool compareSong(Song rhs, Song lhs)
+bool compareSong(Song song1, Song song2)
 {
 /**
  * @brief Custom comparator used to compare the dj_score of all songs.
  * Will sort the songs in ascending order based on dj_score. If the dj_score
  * is within 0.0005 of another song, then songs are sorted based on artist name.
  *
- * @param rhs - the "right" song
- * @param lhs - the "left" song
+ * @param song1 - the first song to compare
+ * @param song2 - the second song to compare the first song to
  */
     // First sort by minimizing the DJ score
-    if (abs(rhs.dj_score-lhs.dj_score) > 0.0005)
+    if (abs(song1.dj_score-song2.dj_score) > 0.0005)
     {
-        return rhs.dj_score < lhs.dj_score;
+        return song1.dj_score < song2.dj_score;
     }
     // If ties exist, alphabetize by the artist's name
     else
     {
-        return rhs.artist < lhs.artist;
+        return song1.artist < song2.artist;
     }
 }
 
@@ -280,11 +264,12 @@ int main()
      * When song is found in vector, output song has been set to start
      * the playlist, otherwise re-prompt user for song title
      */
-    setInputSong(songData);
+    Song setpointSong;
+    getSetpointSong(songData, setpointSong);
 
     // calculate DJ scores
     for(int i = 0; i < songData.size(); ++i){
-        songData.at(i).dj_score = calcDJScore(songData.at(i));
+        songData.at(i).dj_score = calcDJScore(songData.at(i), setpointSong);
     }
 
     // Sort your vector!
@@ -295,6 +280,6 @@ int main()
     ofstream outFile("playlist.txt");
     print_playlist(songData, outFile);
     outFile.close();
-
+    cout << "Playlist complete!" << endl;
     return 0;
 }
